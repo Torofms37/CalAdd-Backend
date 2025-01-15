@@ -1,44 +1,49 @@
-// routes/events.js
+/*
+    Event Routes
+    /api/events
+*/
 const { Router } = require('express');
 const { check } = require('express-validator');
+
 const { isDate } = require('../helpers/isDate');
-const { validateFields } = require('../middlewares/validators');
+const { validarCampos } = require('../middlewares/validator-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
-const { getEventos, crearEvento, actualizarEvento, borrarEvento } = require('../controllers/events');
+const { getEventos, crearEvento, actualizarEvento, eliminarEvento } = require('../controllers/events');
 
 const router = Router();
 
-// Todas tienen que pasar por la validación del token
-router.use(validarJWT);
+// Todas tienes que pasar por la validación del JWT
+router.use( validarJWT );
 
-// Conseguir eventos
-router.get('/', getEventos);
+
+// Obtener eventos 
+router.get('/', getEventos );
 
 // Crear un nuevo evento
 router.post(
     '/',
     [
-        check('title', 'El título es obligatorio').not().isEmpty(),
-        check('start', 'La fecha de inicio es obligatoria').custom(isDate),
-        check('end', 'La fecha de termino es obligatoria').custom(isDate),
-        validateFields
+        check('title','El titulo es obligatorio').not().isEmpty(),
+        check('start','Fecha de inicio es obligatoria').custom( isDate ),
+        check('end','Fecha de finalización es obligatoria').custom( isDate ),
+        validarCampos
     ],
-    crearEvento
+    crearEvento 
 );
 
-// Actualizar evento
+// Actualizar Evento
 router.put(
-    '/:id',
+    '/:id', 
     [
-        check('title', 'El título es obligatorio').not().isEmpty(),
-        check('start', 'La fecha de inicio es obligatoria').custom(isDate),
-        check('end', 'La fecha de termino es obligatoria').custom(isDate),
-        validateFields
+        check('title','El titulo es obligatorio').not().isEmpty(),
+        check('start','Fecha de inicio es obligatoria').custom( isDate ),
+        check('end','Fecha de finalización es obligatoria').custom( isDate ),
+        validarCampos
     ],
-    actualizarEvento
+    actualizarEvento 
 );
 
-// Eliminar evento
-router.delete('/:id', borrarEvento);
+// Borrar evento
+router.delete('/:id', eliminarEvento );
 
 module.exports = router;
